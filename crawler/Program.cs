@@ -17,7 +17,15 @@ namespace Crawler
             InitializeSettings();
 
             var crawler = new Crawler(Settings);
-            crawler.Run();
+
+            try
+            {
+                crawler.Run();
+            }
+            catch
+            {
+                Console.WriteLine("Something went wrong. Crawler stopped");
+            }
 
             foreach (var s in Settings.Connection.Urls)
             {
