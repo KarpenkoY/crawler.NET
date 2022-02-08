@@ -1,12 +1,38 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using Crawler.Library;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace crawler
+namespace Crawler
 {
-    class Program
+    public class Program
     {
+        static Settings Settings { get; set; }
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            InitializeSettings();
+
+            var crawler = new Crawler(Settings);
+            crawler.Run();
+
+            foreach (var s in Settings.Connection.Urls)
+            {
+                Console.WriteLine(s);
+            }
+        }
+
+        private static void InitializeSettings()
+        {
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json");
+
+            var settings = new Settings();
+            builder.Build().Bind(settings);
+            Settings = settings;
         }
     }
 }
